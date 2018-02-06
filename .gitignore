@@ -1,0 +1,20 @@
+site
+
+# IDE
+.idea
+.vscode
+.history
+
+# Node
+node_modules
+
+# Only apps should have lockfiles
+yarn.lock
+package-lock.json
+
+# Secure
+deploy-key
+deploy-key.pub
+
+# Terraform
+.terraform
