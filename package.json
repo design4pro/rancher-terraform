@@ -1,0 +1,44 @@
+{
+  "name": "rancher-terraform",
+  "version": "0.0.0",
+  "description": "Deploy Rancher on Google Compute Engine (GCE).",
+  "scripts": {
+    "lint": "markdownlint --config .markdownlint.json **/*.md",
+    "release": "release-me --release-count=0",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "mkdocs serve"
+  },
+  "devDependencies": {
+    "commitizen": "^2.9.6",
+    "cz-release-me": "^1.4.0",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "markdownlint-cli": "^0.6.0",
+    "release-me": "^1.4.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-release-me"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/design4pro/rancher-terraform.git"
+  },
+  "keywords": [
+    "docs",
+    "development"
+  ],
+  "author": {
+    "name": "Rafał Wolak",
+    "email": "r.wolak@design4.pro",
+    "url": "https://www.design4.pro"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/design4pro/rancher-terraform/issues"
+  },
+  "homepage": "https://github.com/design4pro/rancher-terraform#readme"
+}
