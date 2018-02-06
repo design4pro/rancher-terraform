@@ -1,6 +1,6 @@
 {
   "name": "rancher-terraform",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Deploy Rancher on Google Compute Engine (GCE).",
   "scripts": {
     "lint": "markdownlint --config .markdownlint.json **/*.md",
