@@ -10,7 +10,6 @@ resource "google_sql_database_instance" "master" {
     disk_type = "${var.disk_type}"
     ip_configuration {
       ipv4_enabled = true
-
     }
   }
 }
