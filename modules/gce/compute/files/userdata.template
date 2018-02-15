@@ -10,7 +10,7 @@ write_files:
       wait-for-docker
       docker run -d -p 8080:8080 -p 9345:9345 --net=host --name rancher-server --restart=always -e CATTLE_USE_LOCAL_ARTIFACTS=false -e JAVA_OPTS="-Xmx8g" rancher/server:${rancher_version} --advertise-address $(wget -qO - --header="Metadata-Flavor: Google" http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip) --db-host 127.0.0.1 --db-pass ${database_password} --db-user ${database_user}
 
-      docker run -d -v /cloudsql:/cloudsql -p 127.0.0.1:3306:3306 --name gce-cloud-sql-proxy --restart=on-failure:10 gcr.io/cloudsql-docker/gce-proxy:1.10 /cloud_sql_proxy -instances=${gce-cloud-sql-instance-connection-name}=tcp:0.0.0.0:3306
+      docker run -d -v /cloudsql:/cloudsql -p 127.0.0.1:3306:3306 --name gce-cloud-sql-proxy --restart=on-failure:10 gcr.io/cloudsql-docker/gce-proxy:1.10 /cloud_sql_proxy -instances=${gce_instance_connection_name}=tcp:0.0.0.0:3306
 rancher:
   docker:
     engine: ${docker_version}
