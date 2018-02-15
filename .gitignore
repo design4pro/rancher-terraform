@@ -18,4 +18,4 @@ deploy-key.pub
 
 # Terraform
 .terraform
-.tfvars
+*.tfvars
