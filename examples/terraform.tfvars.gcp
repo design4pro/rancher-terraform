@@ -1,0 +1,21 @@
+
+// The base DNS domain of the cluster. It must NOT contain a trailing period. Some
+// DNS providers will automatically add this if necessary.
+//
+// Example: `rancher.dev`.
+//
+// Note: This field MUST be set manually prior to creating the cluster.
+// This applies only to cloud platforms.
+rancher_base_domain = ""
+
+// The name of the cluster.
+// If used in a cloud-environment, this will be prepended to `rancher_base_domain` resulting in the URL to the Rancher UI.
+//
+// Note: This field MUST be set manually prior to creating the cluster.
+// Warning: Special characters in the name like '.' may cause errors on OpenStack platforms due to resource name constraints.
+rancher_cluster_name = ""
+
+rancher_version = "stable"
+
+// GCP resource name of Cloud DNS ManagedZone - created outside of Rancher
+rancher_gcp_ext_google_managedzone_name = ""
