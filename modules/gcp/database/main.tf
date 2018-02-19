@@ -43,8 +43,7 @@ resource "google_sql_database" "master" {
   instance = "${google_sql_database_instance.master.name}"
 }
 
-
-resource "google_sql_user" "rancher" {
+resource "google_sql_user" "default" {
   name     = "${var.db_user}"
   instance = "${google_sql_database_instance.master.name}"
   host     = "%"

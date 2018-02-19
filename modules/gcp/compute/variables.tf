@@ -23,7 +23,8 @@ SOFTWARE.
 */
 
 variable "cluster_name" {
-  type = "string"
+  type    = "string"
+  default = "claster"
 }
 
 variable "region" {

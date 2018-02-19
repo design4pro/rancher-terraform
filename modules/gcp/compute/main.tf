@@ -30,13 +30,13 @@ resource "google_compute_image" "rancheros" {
   }
 }
 
-resource "google_compute_instance_template" "rancher-servers" {
-  name           = "${var.cluster_name}-rancher-servers"
+resource "google_compute_instance_template" "master" {
+  name           = "${var.cluster_name}-rancher"
   region         = "${var.region}"
   machine_type   = "${var.machine_type}"
   can_ip_forward = false
 
-  tags = ["${var.instance_tags}", "rancher-servers", "created-by-terraform"]
+  tags = ["${var.instance_tags}", "rancher", "created-by-terraform"]
 
   scheduling {
     automatic_restart   = true
@@ -65,17 +65,17 @@ resource "google_compute_instance_template" "rancher-servers" {
   metadata_startup_script = "${data.template_file.userdata.rendered}"
 }
 
-resource "google_compute_instance_group_manager" "rancher-servers" {
+resource "google_compute_instance_group_manager" "master" {
   count = 1
-  name  = "${var.cluster_name}-rancher-servers-${count.index}"
+  name  = "${var.cluster_name}-rancher-${count.index}"
   description = "Rancher Servers Instance Group Manager"
 
-  base_instance_name = "${var.cluster_name}-rancher-server"
-  instance_template  = "${google_compute_instance_template.rancher-servers.self_link}"
+  base_instance_name = "${var.cluster_name}-rancher"
+  instance_template  = "${google_compute_instance_template.master.self_link}"
   update_strategy    = "NONE"
   zone               = "${element(var.zone_list, count.index)}"
 
-  target_pools = ["${google_compute_target_pool.rancher-servers.self_link}"]
+  target_pools = ["${google_compute_target_pool.master.self_link}"]
   target_size  = "${var.instance_count}"
 
   named_port {
@@ -84,8 +84,8 @@ resource "google_compute_instance_group_manager" "rancher-servers" {
   }
 }
 
-resource "google_compute_http_health_check" "rancher-servers" {
-  name         = "${var.cluster_name}-rancher-servers-health-check"
+resource "google_compute_http_health_check" "master" {
+  name         = "${var.cluster_name}-rancher-health-check"
   description  = "Health check for Rancher instances"
   request_path = "/v1/scripts/api.crt"
   port         = "8080"
@@ -95,13 +95,13 @@ resource "google_compute_http_health_check" "rancher-servers" {
   unhealthy_threshold = 2
 }
 
-resource "google_compute_target_pool" "rancher-servers" {
-  name        = "${var.cluster_name}-rancher-servers-target"
+resource "google_compute_target_pool" "master" {
+  name        = "${var.cluster_name}-rancher-target"
   description = "Target pool for Rancher"
-  depends_on  = ["google_compute_http_health_check.rancher-servers"]
+  depends_on  = ["google_compute_http_health_check.master"]
 
   health_checks = [
-    "${google_compute_http_health_check.rancher-servers.name}",
+    "${google_compute_http_health_check.master.name}",
   ]
   // Options are "NONE" (no affinity). "CLIENT_IP" (hash of the source/dest addresses / ports), and "CLIENT_IP_PROTO" also includes the protocol (default "NONE").
   session_affinity = "NONE"
@@ -120,17 +120,17 @@ data "template_file" "userdata" {
   }
 }
 
-resource "google_compute_forwarding_rule" "rancher-servers" {
-  name                  = "${var.cluster_name}-rancher-servers-forwarder"
+resource "google_compute_forwarding_rule" "master" {
+  name                  = "${var.cluster_name}-rancher-forwarder"
   description           = "Externally facing forwarder for Rancher"
-  target                = "${google_compute_target_pool.rancher-servers.self_link}"
+  target                = "${google_compute_target_pool.master.self_link}"
   ip_protocol           = "TCP"
   port_range            = "80-8080"
   load_balancing_scheme = "EXTERNAL"
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "${var.cluster_name}-rancher-servers-firewall"
+  name    = "${var.cluster_name}-rancher-firewall"
   network = "default"
 
   allow {
@@ -149,5 +149,5 @@ resource "google_compute_firewall" "default" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["rancher-servers"]
+  target_tags   = ["rancher"]
 }
