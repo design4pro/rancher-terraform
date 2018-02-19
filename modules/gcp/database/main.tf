@@ -24,7 +24,7 @@ SOFTWARE.
 
 resource "google_sql_database_instance" "master" {
   count             = 1
-  name              = "${var.cluster_name}-master-${count.index}"
+  name              = "${var.cluster_name}-rancher-${count.index}"
   region            = "${var.region}"
   database_version  = "MYSQL_5_6"
 

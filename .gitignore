@@ -15,5 +15,6 @@ deploy-key
 deploy-key.pub
 
 # Terraform
+/build/
 .terraform
 *.tfvars

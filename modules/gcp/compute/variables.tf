@@ -22,41 +22,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-variable "cluster_name" {}
-variable "region" {}
+variable "cluster_name" {
+  type = "string"
+}
+
+variable "region" {
+  type = "string"
+}
+
 variable "machine_type" {}
 variable "disk_type" {}
 variable "disk_size" {}
 variable "zone_list" {}
+
 variable "instance_count" {
   default = "1"
 }
+
 variable "service_account_scopes" {
   type = "list"
 }
+
 variable "instance_metadata" {
   type = "map"
   default = {}
 }
+
 variable "instance_tags"  {
   type = "list"
   default = []
 }
-variable "database_endpoint" {
-  default = ""
-}
+
 variable "database_user" {
   default = ""
 }
+
 variable "database_password" {
   default = ""
 }
+
 variable "docker_version" {
   default = "docker-1.12.6"
 }
+
 variable "rancher_version" {
   default = "stable"
 }
+
 variable "gce_instance_connection_name" {}
 
 variable "ssh_pub_key" {}

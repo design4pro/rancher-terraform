@@ -30,13 +30,13 @@ resource "google_compute_image" "rancheros" {
   }
 }
 
-resource "google_compute_instance_template" "worker-it" {
-  name           = "${var.cluster_name}-worker-it"
+resource "google_compute_instance_template" "rancher-servers" {
+  name           = "${var.cluster_name}-rancher-servers"
   region         = "${var.region}"
   machine_type   = "${var.machine_type}"
   can_ip_forward = false
 
-  tags = ["${var.instance_tags}", "rancher-workers", "created-by-terraform"]
+  tags = ["${var.instance_tags}", "rancher-servers", "created-by-terraform"]
 
   scheduling {
     automatic_restart   = true
@@ -65,16 +65,17 @@ resource "google_compute_instance_template" "worker-it" {
   metadata_startup_script = "${data.template_file.userdata.rendered}"
 }
 
-resource "google_compute_instance_group_manager" "worker" {
+resource "google_compute_instance_group_manager" "rancher-servers" {
   count = 1
-  name  = "${var.cluster_name}-worker-${count.index}"
+  name  = "${var.cluster_name}-rancher-servers-${count.index}"
+  description = "Rancher Servers Instance Group Manager"
 
-  base_instance_name = "${var.cluster_name}-worker"
-  instance_template  = "${google_compute_instance_template.rancher.self_link}"
+  base_instance_name = "${var.cluster_name}-rancher-server"
+  instance_template  = "${google_compute_instance_template.rancher-servers.self_link}"
   update_strategy    = "NONE"
   zone               = "${element(var.zone_list, count.index)}"
 
-  target_pools = ["${google_compute_target_pool.rancher.self_link}"]
+  target_pools = ["${google_compute_target_pool.rancher-servers.self_link}"]
   target_size  = "${var.instance_count}"
 
   named_port {
@@ -83,8 +84,8 @@ resource "google_compute_instance_group_manager" "worker" {
   }
 }
 
-resource "google_compute_http_health_check" "rancher" {
-  name         = "${var.cluster_name}-health-check"
+resource "google_compute_http_health_check" "rancher-servers" {
+  name         = "${var.cluster_name}-rancher-servers-health-check"
   description  = "Health check for Rancher instances"
   request_path = "/v1/scripts/api.crt"
   port         = "8080"
@@ -94,13 +95,13 @@ resource "google_compute_http_health_check" "rancher" {
   unhealthy_threshold = 2
 }
 
-resource "google_compute_target_pool" "rancher" {
-  name        = "${var.cluster_name}-target"
+resource "google_compute_target_pool" "rancher-servers" {
+  name        = "${var.cluster_name}-rancher-servers-target"
   description = "Target pool for Rancher"
-  depends_on  = ["google_compute_http_health_check.rancher"]
+  depends_on  = ["google_compute_http_health_check.rancher-servers"]
 
   health_checks = [
-    "${google_compute_http_health_check.rancher.name}",
+    "${google_compute_http_health_check.rancher-servers.name}",
   ]
   // Options are "NONE" (no affinity). "CLIENT_IP" (hash of the source/dest addresses / ports), and "CLIENT_IP_PROTO" also includes the protocol (default "NONE").
   session_affinity = "NONE"
@@ -110,7 +111,6 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/files/userdata.template")}"
 
   vars {
-    database_endpoint            = "${var.database_endpoint}"
     database_user                = "${var.database_user}"
     database_password            = "${var.database_password}"
     rancher_version              = "${var.rancher_version}"
@@ -120,17 +120,17 @@ data "template_file" "userdata" {
   }
 }
 
-resource "google_compute_forwarding_rule" "rancher" {
-  name                  = "${var.cluster_name}-forwarder"
+resource "google_compute_forwarding_rule" "rancher-servers" {
+  name                  = "${var.cluster_name}-rancher-servers-forwarder"
   description           = "Externally facing forwarder for Rancher"
-  target                = "${google_compute_target_pool.rancher.self_link}"
+  target                = "${google_compute_target_pool.rancher-servers.self_link}"
   ip_protocol           = "TCP"
   port_range            = "80-8080"
   load_balancing_scheme = "EXTERNAL"
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "${var.cluster_name}-firewall"
+  name    = "${var.cluster_name}-rancher-servers-firewall"
   network = "default"
 
   allow {
@@ -149,5 +149,5 @@ resource "google_compute_firewall" "default" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["rancher"]
+  target_tags   = ["rancher-servers"]
 }

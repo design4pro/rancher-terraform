@@ -33,7 +33,7 @@ variable "rancher_gcp_ext_google_managedzone_name" {
   description = "GCP resource name of Cloud DNS ManagedZone - created outside of Rancher"
 }
 
-variable "rancher_gce_project" {
+variable "rancher_gcp_project" {
   type        = "string"
 }
 
@@ -75,7 +75,7 @@ also be escaped.
 EOF
 }
 
-variable "rancher_gcp_master_gce_type" {
+variable "rancher_gcp_compute_gce_type" {
   type        = "string"
   default     = "n1-standard-2"
   description = "Instance size for the master node(s). Example: `n1-standard-2`."
@@ -89,4 +89,20 @@ variable "rancher_compute_count" {
 The number of master nodes to be created.
 This applies only to cloud platforms.
 EOF
+}
+
+variable "rancher_gcp_compute_disk_type" {
+  type        = "string"
+  default     = "pd-standard"
+  description = "The type of disk (pd-standard or pd-ssd) for the master nodes."
+}
+
+variable "rancher_gcp_compute_disk_size" {
+  type        = "string"
+  default     = "30"
+  description = "The size of the disk in gigabytes for the root block device of master nodes."
+}
+
+variable "rancher_gcp_ssh_pub_key" {
+  type    = "string"
 }
