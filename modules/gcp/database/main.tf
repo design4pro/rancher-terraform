@@ -22,10 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+resource "random_id" "database" {
+   byte_length = 4
+}
+
 // Instance
 resource "google_sql_database_instance" "master" {
-  count            = 1
-  name             = "${var.cluster_name}-rancher-master-${count.index}"
+  name             = "${var.cluster_name}-rancher-master-${random_id.database.hex}"
   region           = "${var.region}"
   database_version = "${var.db_version}"
 
@@ -53,7 +56,7 @@ resource "google_sql_database_instance" "master" {
 
 resource "google_sql_database_instance" "failover" {
   count                 = 1
-  name                  = "${var.cluster_name}-rancher-failover-${count.index}"
+  name                  = "${var.cluster_name}-rancher-failover-${count.index}-${random_id.database.hex}"
   region                = "${var.region}"
   database_version      = "${var.db_version}"
   master_instance_name  = "${google_sql_database_instance.master.name}"
@@ -82,6 +85,10 @@ resource "google_sql_database_instance" "failover" {
 resource "google_sql_database" "master" {
   name     = "cattle"
   instance = "${google_sql_database_instance.master.name}"
+
+  # Tells Terraform that this instance must be created only after the
+  # master instance has been created.
+  depends_on = ["google_sql_database_instance.master"]
 }
 
 // User
@@ -90,4 +97,8 @@ resource "google_sql_user" "default" {
   instance = "${google_sql_database_instance.master.name}"
   host     = "%"
   password = "${var.db_pass}"
+
+  # Tells Terraform that this instance must be created only after the
+  # master instance has been created.
+  depends_on = ["google_sql_database_instance.master"]
 }
