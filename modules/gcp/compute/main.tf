@@ -66,14 +66,14 @@ resource "google_compute_instance_template" "master" {
 }
 
 resource "google_compute_instance_group_manager" "master" {
-  count = 1
-  name  = "${var.cluster_name}-rancher-${count.index}"
+  count       = 1
+  name        = "${var.cluster_name}-rancher-${count.index}"
   description = "Rancher Servers Instance Group Manager"
 
   base_instance_name = "${var.cluster_name}-rancher"
   instance_template  = "${google_compute_instance_template.master.self_link}"
   update_strategy    = "NONE"
-  zone               = "${element(var.zone_list, count.index)}"
+  zone               = "${var.zone_list[count.index]}"
 
   target_pools = ["${google_compute_target_pool.master.self_link}"]
   target_size  = "${var.instance_count}"

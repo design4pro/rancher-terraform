@@ -34,7 +34,11 @@ variable "region" {
 variable "machine_type" {}
 variable "disk_type" {}
 variable "disk_size" {}
-variable "zone_list" {}
+
+variable "zone_list" {
+  type = "list"
+  default = []
+}
 
 variable "instance_count" {
   default = "1"
@@ -63,7 +67,7 @@ variable "database_password" {
 }
 
 variable "docker_version" {
-  default = "docker-1.12.6"
+  default = "docker-1.13"
 }
 
 variable "rancher_version" {

@@ -22,46 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-variable "cluster_name" {
-  type    = "string"
-  default = "cluster"
-}
-
-variable "region" {
-  type = "string"
-}
-
-variable "regions" {
-  type = "map"
-}
-
-variable "db_version" {
-  type = "string"
-  default = "MYSQL_5_7"
-}
-
-variable "db_tier" {
-  type = "string"
-}
-
-variable "disk_size" {
-  type = "string"
-}
-
-variable "disk_type" {
-  type    = "string"
-  default = "PD_HDD"
-}
-
-variable "db_backup_start_time" {
-  type    = "string"
-  default = "02:00"
-}
-
-variable "db_user" {
-  type = "string"
-}
-
-variable "db_pass" {
-  type = "string"
+output "database_name" {
+  value = "${google_sql_database_instance.master.name}"
 }

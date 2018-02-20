@@ -50,13 +50,13 @@ variable "rancher_gcp_database_gce_type" {
 
 variable "rancher_gcp_database_disk_type" {
   type        = "string"
-  default     = "pd-standard"
-  description = "The type of disk (pd-standard or pd-ssd) for the mdatabaseaster nodes."
+  default     = "PD_HDD"
+  description = "The type of disk (PD_HDD or PD_SSD) for the database nodes."
 }
 
 variable "rancher_gcp_database_disk_size" {
   type        = "string"
-  default     = "30"
+  default     = "10"
   description = "The size of the disk in gigabytes for the root block device of database nodes."
 }
 

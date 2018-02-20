@@ -22,34 +22,72 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+// Instance
 resource "google_sql_database_instance" "master" {
-  count             = 1
-  name              = "${var.cluster_name}-rancher-${count.index}"
-  region            = "${var.region}"
-  database_version  = "MYSQL_5_6"
+  count            = 1
+  name             = "${var.cluster_name}-rancher-master-${count.index}"
+  region           = "${var.region}"
+  database_version = "${var.db_version}"
 
   settings {
-    tier      = "${var.db_tier}"
-    disk_size = "${var.disk_size}"
-    disk_type = "${var.disk_type}"
+    tier            = "${var.db_tier}"
+    disk_size       = "${var.disk_size}"
+    disk_type       = "${var.disk_type}"
+    disk_autoresize = "true"
+
     ip_configuration {
       ipv4_enabled = true
+    }
+
+    backup_configuration {
+      binary_log_enabled = "true"
+      enabled            = "true"
+      start_time         = "${var.db_backup_start_time}"
+    }
+
+    location_preference {
+      zone = "${lookup(var.regions["${var.region}"], "zone1")}"
     }
   }
 }
 
+resource "google_sql_database_instance" "failover" {
+  count                 = 1
+  name                  = "${var.cluster_name}-rancher-failover-${count.index}"
+  region                = "${var.region}"
+  database_version      = "${var.db_version}"
+  master_instance_name  = "${google_sql_database_instance.master.name}"
+
+  replica_configuration {
+    failover_target = "true"
+  }
+
+  settings {
+    tier            = "${var.db_tier}"
+    disk_size       = "${var.disk_size}"
+    disk_type       = "${var.disk_type}"
+    disk_autoresize = "true"
+
+    ip_configuration {
+      ipv4_enabled = true
+    }
+
+    location_preference {
+      zone = "${lookup(var.regions["${var.region}"], "zone2")}"
+    }
+  }
+}
+
+// Database
 resource "google_sql_database" "master" {
   name     = "cattle"
   instance = "${google_sql_database_instance.master.name}"
 }
 
+// User
 resource "google_sql_user" "default" {
   name     = "${var.db_user}"
   instance = "${google_sql_database_instance.master.name}"
   host     = "%"
   password = "${var.db_pass}"
-}
-
-output "database_name" {
-  value = "${google_sql_database_instance.master.name}"
 }

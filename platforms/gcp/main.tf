@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 provider "google" {
+  project = "${var.rancher_gcp_project}"
   region  = "${var.rancher_gcp_region}"
   version = "1.2.0"
 }
@@ -32,6 +33,7 @@ module "gcp_database" {
 
   cluster_name = "${var.rancher_cluster_name}"
   region       = "${var.rancher_gcp_region}"
+  regions      = "${var.rancher_gcp_regions}"
   db_tier      = "${var.rancher_gcp_database_gce_type}"
   disk_size    = "${var.rancher_gcp_database_disk_size}"
   disk_type    = "${var.rancher_gcp_database_disk_type}"
