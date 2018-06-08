@@ -9,13 +9,13 @@
     "serve": "mkdocs serve"
   },
   "devDependencies": {
-    "commitizen": "^2.9.6",
-    "cz-release-me": "^1.4.0",
-    "eslint": "^4.15.0",
+    "commitizen": "^2.10.1",
+    "cz-release-me": "^1.6.1",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
-    "markdownlint-cli": "^0.6.0",
+    "markdownlint-cli": "^0.10.0",
     "release-me": "^1.4.2"
   },
   "config": {
@@ -32,7 +32,7 @@
     "development"
   ],
   "author": {
-    "name": "Rafał Wolak",
+    "name": "DESIGN4PRO",
     "email": "r.wolak@design4.pro",
     "url": "https://www.design4.pro"
   },

@@ -1,4 +1,3 @@
-
 // The base DNS domain of the cluster. It must NOT contain a trailing period. Some
 // DNS providers will automatically add this if necessary.
 //

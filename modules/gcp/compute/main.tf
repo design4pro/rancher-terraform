@@ -24,9 +24,9 @@ SOFTWARE.
 
 resource "google_compute_image" "rancheros" {
   name = "rancheros"
+
   raw_disk {
-    source = "https://storage.googleapis.com/releases.rancher.com/os/v1.0.3/rancheros-v1.0.3.tar.gz"
-    sha1 = "e151a5fab00a7ee83c9f9589a42a3fbb833043c1"
+    source = "https://github.com/rancher/os/releases/download/v1.4.0/rancheros-gce.tar.gz"
   }
 }
 
@@ -52,12 +52,12 @@ resource "google_compute_instance_template" "master" {
   }
 
   network_interface {
-    network = "default"
-    access_config {}
+    network       = "default"
+    access_config = {}
   }
 
   service_account {
-    scopes = [ "compute-ro", "storage-ro", "cloud-platform"]
+    scopes = ["compute-ro", "storage-ro", "cloud-platform"]
   }
 
   metadata = "${var.instance_metadata}"
@@ -87,8 +87,8 @@ resource "google_compute_instance_group_manager" "master" {
 resource "google_compute_http_health_check" "master" {
   name         = "${var.cluster_name}-rancher-health-check"
   description  = "Health check for Rancher instances"
-  request_path = "/v1/scripts/api.crt"
-  port         = "8080"
+  request_path = "/healthz"
+  port         = "80"
 
   timeout_sec         = 2
   check_interval_sec  = 30
@@ -103,6 +103,7 @@ resource "google_compute_target_pool" "master" {
   health_checks = [
     "${google_compute_http_health_check.master.name}",
   ]
+
   // Options are "NONE" (no affinity). "CLIENT_IP" (hash of the source/dest addresses / ports), and "CLIENT_IP_PROTO" also includes the protocol (default "NONE").
   session_affinity = "NONE"
 }
@@ -111,8 +112,6 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/files/userdata.template")}"
 
   vars {
-    database_user                = "${var.database_user}"
-    database_password            = "${var.database_password}"
     rancher_version              = "${var.rancher_version}"
     docker_version               = "${var.docker_version}"
     gce_instance_connection_name = "${var.gce_instance_connection_name}"
@@ -125,7 +124,7 @@ resource "google_compute_forwarding_rule" "master" {
   description           = "Externally facing forwarder for Rancher"
   target                = "${google_compute_target_pool.master.self_link}"
   ip_protocol           = "TCP"
-  port_range            = "80-8080"
+  port_range            = "80-6443"
   load_balancing_scheme = "EXTERNAL"
 }
 
@@ -145,7 +144,7 @@ resource "google_compute_firewall" "default" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8080"]
+    ports    = ["443"]
   }
 
   source_ranges = ["0.0.0.0/0"]

@@ -36,7 +36,7 @@ variable "disk_type" {}
 variable "disk_size" {}
 
 variable "zone_list" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
@@ -49,25 +49,17 @@ variable "service_account_scopes" {
 }
 
 variable "instance_metadata" {
-  type = "map"
+  type    = "map"
   default = {}
 }
 
-variable "instance_tags"  {
-  type = "list"
+variable "instance_tags" {
+  type    = "list"
   default = []
 }
 
-variable "database_user" {
-  default = ""
-}
-
-variable "database_password" {
-  default = ""
-}
-
 variable "docker_version" {
-  default = "docker-1.13"
+  default = "17.03.02"
 }
 
 variable "rancher_version" {

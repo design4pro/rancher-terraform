@@ -42,46 +42,13 @@ variable "rancher_gcp_region" {
   description = "The GCP region to use. Some regions only have 2 zones."
 }
 
-variable "rancher_gcp_database_gce_type" {
-  type        = "string"
-  default     = "db-n1-standard-2"
-  description = "Instance size for the database node(s). Example: `db-n1-standard-2`."
-}
-
-variable "rancher_gcp_database_disk_type" {
-  type        = "string"
-  default     = "PD_HDD"
-  description = "The type of disk (PD_HDD or PD_SSD) for the database nodes."
-}
-
-variable "rancher_gcp_database_disk_size" {
-  type        = "string"
-  default     = "10"
-  description = "The size of the disk in gigabytes for the root block device of database nodes."
-}
-
-variable "rancher_gcp_database_user" {
-  type    = "string"
-  default = "cattle"
-}
-
-variable "rancher_gcp_database_password" {
-  type = "string"
-
-  description = <<EOF
-(internal) The database user password to login to the Rancher database.
-Note: This field MUST be set manually prior to creating the cluster. Backslashes and double quotes must
-also be escaped.
-EOF
-}
-
 variable "rancher_gcp_compute_gce_type" {
   type        = "string"
   default     = "n1-standard-2"
   description = "Instance size for the master node(s). Example: `n1-standard-2`."
 }
 
-variable "rancher_compute_count" {
+variable "rancher_gcp_compute_count" {
   type    = "string"
   default = "1"
 
