@@ -112,10 +112,10 @@ data "template_file" "userdata" {
   template = "${file("${path.module}/files/userdata.template")}"
 
   vars {
-    rancher_version              = "${var.rancher_version}"
-    docker_version               = "${var.docker_version}"
-    gce_instance_connection_name = "${var.gce_instance_connection_name}"
-    ssh_pub_key                  = "${var.ssh_pub_key}"
+    rancher_version     = "${var.rancher_version}"
+    rancher_base_domain = "${var.rancher_base_domain}"
+    docker_version      = "${var.docker_version}"
+    ssh_pub_key         = "${var.ssh_pub_key}"
   }
 }
 

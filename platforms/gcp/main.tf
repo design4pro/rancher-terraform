@@ -42,5 +42,6 @@ module "gcp_compute" {
   disk_type              = "${var.rancher_gcp_compute_disk_type}"
   service_account_scopes = []
   rancher_version        = "${var.rancher_version}"
+  rancher_base_domain    = "${var.rancher_base_domain}"
   ssh_pub_key            = "${var.rancher_gcp_ssh_pub_key}"
 }

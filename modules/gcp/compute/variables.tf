@@ -66,6 +66,6 @@ variable "rancher_version" {
   default = "stable"
 }
 
-variable "gce_instance_connection_name" {}
+variable "rancher_base_domain" {}
 
 variable "ssh_pub_key" {}
