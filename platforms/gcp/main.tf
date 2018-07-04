@@ -40,6 +40,7 @@ module "gcp_compute" {
   instance_count         = "${var.rancher_gcp_compute_count}"
   disk_size              = "${var.rancher_gcp_compute_disk_size}"
   disk_type              = "${var.rancher_gcp_compute_disk_type}"
+  source_image           = "${var.rancher_gcp_compute_source_image}"
   service_account_scopes = []
   rancher_version        = "${var.rancher_version}"
   rancher_base_domain    = "${var.rancher_base_domain}"

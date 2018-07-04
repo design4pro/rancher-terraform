@@ -34,6 +34,7 @@ variable "region" {
 variable "machine_type" {}
 variable "disk_type" {}
 variable "disk_size" {}
+variable "source_image" {}
 
 variable "zone_list" {
   type    = "list"

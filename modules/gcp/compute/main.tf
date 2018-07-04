@@ -22,14 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-resource "google_compute_image" "rancheros" {
-  name = "rancheros"
-
-  raw_disk {
-    source = "https://github.com/rancher/os/releases/download/v1.4.0/rancheros-gce.tar.gz"
-  }
-}
-
 resource "google_compute_instance_template" "master" {
   name           = "${var.cluster_name}-rancher"
   region         = "${var.region}"
@@ -44,7 +36,7 @@ resource "google_compute_instance_template" "master" {
   }
 
   disk {
-    source_image = "${google_compute_image.rancheros.self_link}"
+    source_image = "${var.source_image}"
     auto_delete  = true
     boot         = true
     disk_type    = "${var.disk_type}"

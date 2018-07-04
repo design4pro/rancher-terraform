@@ -34,7 +34,7 @@ variable "rancher_gcp_ext_google_managedzone_name" {
 }
 
 variable "rancher_gcp_project" {
-  type        = "string"
+  type = "string"
 }
 
 variable "rancher_gcp_region" {
@@ -70,6 +70,12 @@ variable "rancher_gcp_compute_disk_size" {
   description = "The size of the disk in gigabytes for the root block device of master nodes."
 }
 
+variable "rancher_gcp_compute_source_image" {
+  type        = "string"
+  default     = "cos-cloud/cos-stable"
+  description = "The disk source image https://cloud.google.com/compute/docs/images"
+}
+
 variable "rancher_gcp_ssh_pub_key" {
-  type    = "string"
+  type = "string"
 }
